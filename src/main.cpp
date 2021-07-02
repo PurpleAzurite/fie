@@ -38,6 +38,15 @@ struct Item {
 
 void printHeaders()
 {
+#ifdef FIE_COMPILER_MSVC
+    fmt::print("Permissions");
+    fmt::print(" ");
+    fmt::print("Size");
+    fmt::print("  ");
+    fmt::print("Last Modified");
+    fmt::print("     ");
+    fmt::print("Name\n");
+#else
     fmt::print(fmt::emphasis::underline, "Permissions");
     fmt::print(" ");
     fmt::print(fmt::emphasis::underline, "Size");
@@ -45,6 +54,7 @@ void printHeaders()
     fmt::print(fmt::emphasis::underline, "Last Modified");
     fmt::print("     ");
     fmt::print(fmt::emphasis::underline, "Name\n");
+#endif
 }
 
 char getType(const std::filesystem::directory_entry& entry)

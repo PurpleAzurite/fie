@@ -15,6 +15,10 @@ set(sourceFiles
     src/main.cpp
 )
 
+if (MSVC)
+    add_compile_definitions(FIE_COMPILER_MSVC)
+endif()
+
 add_executable(fie ${sourceFiles})
 
 target_link_libraries(fie PRIVATE fmt)
