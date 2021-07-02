@@ -119,7 +119,7 @@ std::string getSize(const std::filesystem::directory_entry& entry)
             output.append(str);
         }
 
-        if (1024 < size && size < 1048576)
+        else if (1024 <= size && size < 1048576)
         {
             size /= 1024;
             auto str = toStr(size);
@@ -127,10 +127,16 @@ std::string getSize(const std::filesystem::directory_entry& entry)
             output.append("K");
         }
 
-        else if (1048576 <= size)
+        else if (1048576 <= size && size < 1073741824)
         {
             output.append(toStr(size / 1048576));
             output.append("M");
+        }
+
+        else if (1073741824 <= size)
+        {
+            output.append(toStr(size / 1073741824));
+            output.append("G");
         }
     }
 
