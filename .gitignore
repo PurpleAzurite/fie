@@ -4,3 +4,5 @@ install.sh
 
 # Directories
 build
+src/.cache
+src/compile_commands.json
