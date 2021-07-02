@@ -1,0 +1,6 @@
+# Files
+CMakeLists.txt.user
+install.sh
+
+# Directories
+build
