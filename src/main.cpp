@@ -25,7 +25,6 @@ SOFTWARE. */
 
 #include <algorithm>
 #include <filesystem>
-#include <sstream>
 #include <vector>
 
 struct Item
@@ -181,12 +180,10 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    auto items = std::vector<Item>();
-
     printHeaders();
 
     auto dirItr = std::filesystem::directory_iterator(path);
-    auto entries = std::vector<std::filesystem::directory_entry>();
+    auto items = std::vector<Item>();
 
     for (const auto& i : dirItr)
     {
