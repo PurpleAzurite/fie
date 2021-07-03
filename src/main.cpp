@@ -28,7 +28,8 @@ SOFTWARE. */
 #include <sstream>
 #include <vector>
 
-struct Item {
+struct Item
+{
     char type;
     std::string permissions;
     std::string size;
@@ -172,7 +173,6 @@ std::string getName(const std::filesystem::directory_entry& entry)
 
 int main(int argc, char* argv[])
 {
-
     auto path = argc == 2 ? argv[1] : std::filesystem::current_path();
 
     if (!std::filesystem::exists(path))
@@ -203,12 +203,15 @@ int main(int argc, char* argv[])
     std::sort(items.begin(), items.end(),
               [](const Item& a, const Item& b) { return a.name < b.name; });
 
+    // Modify this loop to change the printout style
     for (const auto& i : items)
     {
         fmt::print(
-            "{0}{1}  {2} {3} {4}\n", i.type, i.permissions, i.size,
-            fmt::format("{:%y-%m-%d %H:%M:%S}", *std::localtime(&i.time)),
-            i.name);
+            "{0}{1}  {2} {3} ", i.type, i.permissions, i.size,
+            fmt::format("{:%y-%m-%d %H:%M:%S}", *std::localtime(&i.time)));
+
+        i.type == '.' ? fmt::print(fg(fmt::color::gold), "{}\n", i.name)
+                      : fmt::print(fg(fmt::color::aqua), "{}\n", i.name);
     }
 
     return 0;
