@@ -62,6 +62,9 @@ char getType(const std::filesystem::directory_entry& entry)
     if (entry.is_directory())
         return 'd';
 
+    else if (entry.is_symlink())
+        return 'l';
+
     else
         return '.';
 }
@@ -207,8 +210,14 @@ int main(int argc, char* argv[])
             "{0}{1}  {2} {3} ", i.type, i.permissions, i.size,
             fmt::format("{:%y-%m-%d %H:%M:%S}", *std::localtime(&i.time)));
 
-        i.type == '.' ? fmt::print(fg(fmt::color::gold), "{}\n", i.name)
-                      : fmt::print(fg(fmt::color::aqua), "{}\n", i.name);
+        if (i.type == '.')
+            fmt::print(fg(fmt::color::gold), "{}\n", i.name);
+
+        else if (i.type == 'd')
+            fmt::print(fg(fmt::color::aqua), "{}\n", i.name);
+
+        else if (i.type == 'l')
+            fmt::print(fg(fmt::color::pink), "{}\n", i.name);
     }
 
     return 0;
