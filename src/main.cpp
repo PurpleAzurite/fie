@@ -183,7 +183,11 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    printHeaders();
+    if (std::filesystem::is_empty(path))
+    {
+        fmt::print(fg(fmt::color::gold), "Directory is empty\n");
+        return 0;
+    }
 
     auto dirItr = std::filesystem::directory_iterator(path);
     auto items = std::vector<Item>();
@@ -202,6 +206,8 @@ int main(int argc, char* argv[])
 
     std::sort(items.begin(), items.end(),
               [](const Item& a, const Item& b) { return a.name < b.name; });
+
+    printHeaders();
 
     // Modify this loop to change the printout style
     for (const auto& i : items)
