@@ -32,21 +32,12 @@ struct Item
     char type;
     std::string permissions;
     std::string size;
-    std::time_t time;
+    std::string time;
     std::string name;
 };
 
 void printHeaders()
 {
-#ifdef FIE_COMPILER_MSVC
-    fmt::print("Permissions");
-    fmt::print(" ");
-    fmt::print("Size");
-    fmt::print("  ");
-    fmt::print("Last Modified");
-    fmt::print("     ");
-    fmt::print("Name\n");
-#else
     fmt::print(fmt::emphasis::underline, "Permissions");
     fmt::print(" ");
     fmt::print(fmt::emphasis::underline, "Size");
@@ -54,7 +45,6 @@ void printHeaders()
     fmt::print(fmt::emphasis::underline, "Last Modified");
     fmt::print("     ");
     fmt::print(fmt::emphasis::underline, "Name\n");
-#endif
 }
 
 char getType(const std::filesystem::directory_entry& entry)
@@ -155,14 +145,20 @@ std::string getSize(const std::filesystem::directory_entry& entry)
     return output;
 }
 
-std::time_t getDate(const std::filesystem::directory_entry& entry)
+std::string getTime(const std::filesystem::directory_entry& entry)
 {
     using namespace std::chrono;
+
+    auto output = std::string();
+
+    // FIXME This can fail if the file does not have last_write_time.
 
     auto time =
         system_clock::to_time_t(file_clock::to_sys(entry.last_write_time()));
 
-    return time;
+    output = fmt::format("{:%y-%m-%d %H:%M:%S}", *std::localtime(&time));
+
+    return output;
 }
 
 std::string getName(const std::filesystem::directory_entry& entry)
@@ -175,6 +171,14 @@ std::string getName(const std::filesystem::directory_entry& entry)
 
 int main(int argc, char* argv[])
 {
+struct Item
+{
+    char type;
+    std::string permissions;
+    std::string size;
+    std::string time;
+    std::string name;
+};
     auto path = argc == 2 ? argv[1] : std::filesystem::current_path();
 
     if (!std::filesystem::exists(path))
@@ -197,7 +201,7 @@ int main(int argc, char* argv[])
         auto type = getType(i);
         auto perm = getPerms(std::filesystem::status(i).permissions());
         auto size = getSize(i);
-        auto time = getDate(i);
+        auto time = getTime(i);
         auto name = getName(i);
 
         Item item{type, perm, size, time, name};
@@ -212,9 +216,7 @@ int main(int argc, char* argv[])
     // Modify this loop to change the printout style
     for (const auto& i : items)
     {
-        fmt::print(
-            "{0}{1}  {2} {3} ", i.type, i.permissions, i.size,
-            fmt::format("{:%y-%m-%d %H:%M:%S}", *std::localtime(&i.time)));
+        fmt::print("{0}{1}  {2} {3} ", i.type, i.permissions, i.size, i.time);
 
         if (i.type == '.')
             fmt::print(fg(fmt::color::gold), "{}\n", i.name);
