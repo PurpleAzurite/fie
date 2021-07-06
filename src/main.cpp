@@ -1,4 +1,4 @@
-/* Copyright © 2021 PurpleAzurite
+/* Copyright © 2021 Misagh Asgari
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the “Software”), to
@@ -26,6 +26,14 @@ SOFTWARE. */
 #include <algorithm>
 #include <filesystem>
 #include <vector>
+#include <cstdint>
+
+namespace ByteSize {
+    constexpr auto kb = 1024;
+    constexpr auto mb = 1048576;
+    constexpr auto gb = 1073741824;
+    constexpr auto tb = 1099511627776;
+}
 
 struct Item
 {
@@ -41,9 +49,9 @@ void printHeaders()
     fmt::print(fmt::emphasis::underline, "Permissions");
     fmt::print(" ");
     fmt::print(fmt::emphasis::underline, "Size");
-    fmt::print("  ");
+    fmt::print("   ");
     fmt::print(fmt::emphasis::underline, "Last Modified");
-    fmt::print("     ");
+    fmt::print("      ");
     fmt::print(fmt::emphasis::underline, "Name\n");
 }
 
@@ -106,35 +114,35 @@ std::string getSize(const std::filesystem::directory_entry& entry)
         size = ceil(size);
         auto sizeStr = std::string();
 
-        if (size < 1024)
+        if (size < ByteSize::kb)
         {
             auto str = toStr(size);
             output.append(str);
         }
 
-        else if (1024 <= size && size < 1048576)
+        else if (ByteSize::kb <= size && size < ByteSize::mb)
         {
-            size /= 1024;
+            size /= ByteSize::kb;
             auto str = toStr(size);
             output.append(toStr(size));
             output.append("K");
         }
 
-        else if (1048576 <= size && size < 1073741824)
+        else if (ByteSize::mb <= size && size < ByteSize::gb)
         {
-            output.append(toStr(size / 1048576));
+            output.append(toStr(size / ByteSize::mb));
             output.append("M");
         }
 
-        else if (1073741824 <= size && size < 1099511627776)
+        else if (ByteSize::gb <= size && size < ByteSize::tb)
         {
-            output.append(toStr(size / 1073741824));
+            output.append(toStr(size / ByteSize::gb));
             output.append("G");
         }
 
-        else if (1099511627776 <= size)
+        else if (ByteSize::tb <= size)
         {
-            output.append(toStr(size / 1099511627776));
+            output.append(toStr(size / ByteSize::tb));
             output.append("T");
         }
     }
@@ -151,12 +159,13 @@ std::string getTime(const std::filesystem::directory_entry& entry)
 
     auto output = std::string();
 
-    // FIXME This can fail if the file does not have last_write_time.
+    if (entry.is_regular_file() || entry.is_directory())
+    {
+        auto time =
+            system_clock::to_time_t(file_clock::to_sys(entry.last_write_time()));
 
-    auto time =
-        system_clock::to_time_t(file_clock::to_sys(entry.last_write_time()));
-
-    output = fmt::format("{:%y-%m-%d %H:%M:%S}", *std::localtime(&time));
+        output = fmt::format("{:%y-%m-%d %H:%M:%S}", *std::localtime(&time));
+    }
 
     return output;
 }
@@ -216,7 +225,7 @@ struct Item
     // Modify this loop to change the printout style
     for (const auto& i : items)
     {
-        fmt::print("{0}{1}  {2} {3} ", i.type, i.permissions, i.size, i.time);
+        fmt::print("{0}{1}  {2}  {3}  ", i.type, i.permissions, i.size, i.time);
 
         if (i.type == '.')
             fmt::print(fg(fmt::color::gold), "{}\n", i.name);
