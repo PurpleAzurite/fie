@@ -57,11 +57,11 @@ void printHeaders()
 
 char getType(const std::filesystem::directory_entry& entry)
 {
-    if (entry.is_directory())
-        return 'd';
-
-    else if (entry.is_symlink())
+    if (entry.is_symlink())
         return 'l';
+
+    else if (entry.is_directory())
+        return 'd';
 
     else
         return '.';
