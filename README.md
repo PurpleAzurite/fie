@@ -1,15 +1,16 @@
-fie is a simple and lightweight repalcement for ls written in C++. It prioritizes being fast and tiny over being feature rich.
+fie is a simple and lightweight repalcement for ls written in C++. It prioritizes being fast, tiny, and easy to extend.
 
 ![](https://i.imgur.com/8CGJwbo.png)
 
 Usage: fie <optional: filesystem_path>
 
-What's so good?
-- Tiny binary ~168k
+What's good?
+- Tiny binary (~170k)
+- No dependencies
 - C++ fast
-- Single .cpp file, easy to expand and customize
-- Very simple to add custom printout styles thanks to fmt
+- Cross platform
+- Single .cpp file, easy to extend and customize
 
 Todo: 
-  - Show file owner
-  - Fix bug when fetching last_write_time for entries that do not have it
+  - Show filesystem entry owner
+  - Make it easy to compile for MSVC without having to modify the source code
