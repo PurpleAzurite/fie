@@ -13,4 +13,3 @@ What's so good?
 Todo: 
   - Show file owner
   - Fix bug when fetching last_write_time for entries that do not have it
-  - Improve symlink entry appearance (show real path)

@@ -26,7 +26,6 @@ SOFTWARE. */
 #include <algorithm>
 #include <filesystem>
 #include <vector>
-#include <cstdint>
 
 namespace ByteSize {
     constexpr auto kb = 1024;
@@ -44,6 +43,7 @@ struct Item
     std::string name;
 };
 
+/* Modify this function to change how the headers are displayed */
 void printHeaders()
 {
     fmt::print(fmt::emphasis::underline, "Permissions");
@@ -55,6 +55,7 @@ void printHeaders()
     fmt::print(fmt::emphasis::underline, "Name\n");
 }
 
+/* Symlinks should have priority over other types */
 char getType(const std::filesystem::directory_entry& entry)
 {
     if (entry.is_symlink())
@@ -175,6 +176,12 @@ std::string getName(const std::filesystem::directory_entry& entry)
     auto output = entry.path().stem().string();
     output.append(entry.path().extension().string());
 
+    if (entry.is_symlink())
+    {
+        output.append(" -> ");
+        output.append(std::filesystem::read_symlink(entry));
+    }
+
     return output;
 }
 
@@ -212,6 +219,7 @@ int main(int argc, char* argv[])
     std::sort(items.begin(), items.end(),
               [](const Item& a, const Item& b) { return a.name < b.name; });
 
+    // Remove this call if you don't want a header to be printed
     printHeaders();
 
     // Modify this loop to change the printout style
@@ -219,14 +227,14 @@ int main(int argc, char* argv[])
     {
         fmt::print("{0}{1}  {2}  {3}  ", i.type, i.permissions, i.size, i.time);
 
-        if (i.type == '.')
-            fmt::print(fg(fmt::color::gold), "{}\n", i.name);
+        if (i.type == 'l')
+            fmt::print(fg(fmt::color::pink), "{}\n", i.name);
 
         else if (i.type == 'd')
             fmt::print(fg(fmt::color::aqua), "{}\n", i.name);
 
-        else if (i.type == 'l')
-            fmt::print(fg(fmt::color::pink), "{}\n", i.name);
+        else if (i.type == '.')
+            fmt::print(fg(fmt::color::gold), "{}\n", i.name);
     }
 
     return 0;
