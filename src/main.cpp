@@ -180,14 +180,6 @@ std::string getName(const std::filesystem::directory_entry& entry)
 
 int main(int argc, char* argv[])
 {
-struct Item
-{
-    char type;
-    std::string permissions;
-    std::string size;
-    std::string time;
-    std::string name;
-};
     auto path = argc == 2 ? argv[1] : std::filesystem::current_path();
 
     if (!std::filesystem::exists(path))
