@@ -168,6 +168,9 @@ std::string getTime(const std::filesystem::directory_entry& entry)
         output = fmt::format("{:%y-%m-%d %H:%M:%S}", *std::localtime(&time));
     }
 
+    while (output.size() < 17)
+        output.append(" ");
+
     return output;
 }
 
