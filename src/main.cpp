@@ -28,10 +28,10 @@ SOFTWARE. */
 #include <vector>
 
 namespace ByteSize {
-    constexpr auto kb = 1024;
-    constexpr auto mb = 1048576;
-    constexpr auto gb = 1073741824;
-    constexpr auto tb = 1099511627776;
+    constexpr auto kb = 1000;
+    constexpr auto mb = 100'000;
+    constexpr auto gb = 100'000'000;
+    constexpr auto tb = 100'000'000'000c;
 }
 
 struct Item

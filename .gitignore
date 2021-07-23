@@ -1,8 +1,10 @@
 # Files
+.idea
 CMakeLists.txt.user
 install.sh
 
 # Directories
 build
+cmake-*
 src/.cache
 src/compile_commands.json
