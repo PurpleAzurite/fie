@@ -31,7 +31,7 @@ namespace ByteSize {
     constexpr auto kb = 1000;
     constexpr auto mb = 100'000;
     constexpr auto gb = 100'000'000;
-    constexpr auto tb = 100'000'000'000c;
+    constexpr auto tb = 100'000'000'000;
 }
 
 struct Item
