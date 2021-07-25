@@ -29,9 +29,9 @@ SOFTWARE. */
 
 namespace ByteSize {
     constexpr auto kb = 1000;
-    constexpr auto mb = 100'000;
-    constexpr auto gb = 100'000'000;
-    constexpr auto tb = 100'000'000'000;
+    constexpr auto mb = 1000000;
+    constexpr auto gb = 1000000000;
+    constexpr auto tb = 1000000000000;
 }
 
 struct Item
