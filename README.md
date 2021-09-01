@@ -2,15 +2,14 @@ fie is a simple and lightweight repalcement for ls written in C++. It prioritize
 
 ![](https://i.imgur.com/8CGJwbo.png)
 
-Usage: fie <optional: filesystem_path>
+Usage: fie <args>
 
 What's good?
-- Tiny binary (~170k)
-- No dependencies
+- Tiny binary
+- Minimal dependencies (only uses fmt for colored output)
 - C++ fast
-- Cross platform
 - Single .cpp file, easy to extend and customize
 
 Todo: 
   - Show filesystem entry owner
-  - Make it easy to compile for MSVC without having to modify the source code
+  - Make it easier to compile for MSVC without having to modify the source code
