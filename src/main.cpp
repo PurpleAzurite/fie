@@ -91,7 +91,7 @@ std::string getSize(const std::filesystem::directory_entry& entry)
 
     if (entry.is_regular_file())
     {
-        double size = entry.file_size();
+        double size = static_cast<double>(entry.file_size());
         size = ceil(size);
         auto sizeStr = std::string();
 
@@ -170,7 +170,19 @@ std::string getName(const std::filesystem::directory_entry& entry)
 
 int main(int argc, char* argv[])
 {
-    auto path = argc == 2 ? argv[1] : std::filesystem::current_path();
+    auto path = std::filesystem::current_path();
+
+    if (argc > 1)
+    {
+        if (std::string(argv[1]).find ("--version") != std::string::npos)
+        {
+            fmt::print(fg(fmt::color::aqua), "fie v0.3.0");
+            return 0;
+        }
+
+        else
+            path = argv[1];
+    }
 
     if (!std::filesystem::exists(path))
     {
@@ -180,7 +192,7 @@ int main(int argc, char* argv[])
 
     if (std::filesystem::is_empty(path))
     {
-        fmt::print(fg(fmt::color::gold), "Directory is empty\n");
+        fmt::print(fg(fmt::color::gold), "Directory is empty.\n");
         return 0;
     }
 
