@@ -1,12 +1,25 @@
-cmake_minimum_required(VERSION 3.5)
+# ------------------------------------------------------------------------------
+# Initialize Project
+# ------------------------------------------------------------------------------
+cmake_minimum_required(VERSION 3.21)
+project(fie VERSION 0.3.0 LANGUAGES CXX)
 
-project(fie VERSION 0.2.0 LANGUAGES CXX)
+# ------------------------------------------------------------------------------
+# Set Project Standards
+# ------------------------------------------------------------------------------
+include(cmake/StandardProjectSettings.cmake)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_library(projectStandards INTERFACE)
+target_compile_features(projectStandards INTERFACE cxx_std_20)
 
-include(cmake/standard_project_settings.cmake)
+# ------------------------------------------------------------------------------
+# Set Compiler Warnings
+# ------------------------------------------------------------------------------
+include(cmake/CompilerWarnings.cmake)
+add_library(projectWarnings INTERFACE)
+setProjectWarnings(projectWarnings)
 
+# ------------------------------------------------------------------------------
 add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/fmt)
 
 include_directories(${CMAKE_SOURCE_DIR}/vendor/fmt/include)
@@ -18,3 +31,5 @@ set(sourceFiles
 add_executable(fie ${sourceFiles})
 
 target_link_libraries(fie PRIVATE fmt)
+target_link_libraries(fie PRIVATE projectStandards)
+target_link_libraries(fie PRIVATE projectWarnings)
