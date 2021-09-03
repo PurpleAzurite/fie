@@ -20,16 +20,33 @@ add_library(projectWarnings INTERFACE)
 setProjectWarnings(projectWarnings)
 
 # ------------------------------------------------------------------------------
+# Doxygen
+# ------------------------------------------------------------------------------
+include(cmake/Doxygen.cmake)
+enableDoxygen()
+
+# ------------------------------------------------------------------------------
+# Sub directories
+# ------------------------------------------------------------------------------
 add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/fmt)
 
+# ------------------------------------------------------------------------------
+# Includes
+# ------------------------------------------------------------------------------
 include_directories(${CMAKE_SOURCE_DIR}/vendor/fmt/include)
 
 set(sourceFiles
     src/main.cpp
 )
 
+# ------------------------------------------------------------------------------
+# Output
+# ------------------------------------------------------------------------------
 add_executable(fie ${sourceFiles})
 
+# ------------------------------------------------------------------------------
+# Libraries
+# ------------------------------------------------------------------------------
 target_link_libraries(fie PRIVATE fmt)
 target_link_libraries(fie PRIVATE projectStandards)
 target_link_libraries(fie PRIVATE projectWarnings)
