@@ -8,11 +8,13 @@
 #include <vector>
 
 namespace ByteSize {
-    constexpr auto kb = 1'000;
-    constexpr auto mb = 1'000'000;
-    constexpr auto gb = 1'000'000'000;
-    constexpr auto tb = 1'000'000'000'000;
-}
+
+constexpr auto kb = 1'000;
+constexpr auto mb = 1'000'000;
+constexpr auto gb = 1'000'000'000;
+constexpr auto tb = 1'000'000'000'000;
+
+} // namespace ByteSize
 
 struct Item
 {
@@ -142,8 +144,8 @@ std::string getTime(const std::filesystem::directory_entry& entry)
 
     if (entry.is_regular_file() || entry.is_directory())
     {
-        auto time =
-            system_clock::to_time_t(file_clock::to_sys(entry.last_write_time()));
+        auto time = system_clock::to_time_t(
+            file_clock::to_sys(entry.last_write_time()));
 
         output = fmt::format("{:%y-%m-%d %H:%M:%S}", *std::localtime(&time));
     }
@@ -174,9 +176,9 @@ int main(int argc, char* argv[])
 
     if (argc > 1)
     {
-        if (std::string(argv[1]).find ("--version") != std::string::npos)
+        if (std::string(argv[1]).find("--version") != std::string::npos)
         {
-            fmt::print(fg(fmt::color::aqua), "fie v0.3.0");
+            fmt::print(fg(fmt::color::aqua), "fie v0.3.0\n");
             return 0;
         }
 
