@@ -179,6 +179,16 @@ int main(int argc, char* argv[])
         if (std::string(argv[1]).find("--version") != std::string::npos)
         {
             fmt::print(fg(fmt::color::aqua), "fie v0.3.0\n");
+
+            return 0;
+        }
+
+        else if (std::string(argv[1]).find("--help") != std::string::npos)
+        {
+            fmt::print(fg(fmt::color::aqua), "Usage: fie <args>\n");
+            fmt::print(fg(fmt::color::antique_white), "\t--help\t\tShows this message\n");
+            fmt::print(fg(fmt::color::antique_white), "\t--version\tDisplays program version information\n\n");
+
             return 0;
         }
 
