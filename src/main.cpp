@@ -186,8 +186,13 @@ int main(int argc, char* argv[])
         else if (std::string(argv[1]).find("--help") != std::string::npos)
         {
             fmt::print(fg(fmt::color::aqua), "Usage: fie <args>\n");
-            fmt::print(fg(fmt::color::antique_white), "\t--help\t\tShows this message\n");
-            fmt::print(fg(fmt::color::antique_white), "\t--version\tDisplays program version information\n\n");
+            fmt::print(fg(fmt::color::antique_white),
+                       "\t--help\t\tShows this message\n");
+            fmt::print(fg(fmt::color::antique_white),
+                       "\t--version\tDisplays program version information\n\n");
+            fmt::print(fg(fmt::color::antique_white),
+                       "\t<path>\t\tShows the content of path instead of "
+                       "current directory\n\n");
 
             return 0;
         }
