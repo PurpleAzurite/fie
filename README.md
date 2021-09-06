@@ -2,7 +2,7 @@ fie is a simple and lightweight repalcement for ls written in C++. It prioritize
 
 ![](https://i.imgur.com/8CGJwbo.png)
 
-Usage: fie <args>
+Usage: fie path/args
 
 What's good?
 - Tiny binary
