@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
     {
         if (std::string(argv[1]).find("--version") != std::string::npos)
         {
-            fmt::print(fg(fmt::color::aqua), "fie v0.3.7\n");
+            fmt::print(fg(fmt::color::aqua), "fie v0.3.8\n");
 
             return 0;
         }
@@ -198,7 +198,7 @@ int main(int argc, char* argv[])
             path = argv[1];
     }
 
-    if (!std::filesystem::exists(path))
+    if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path))
     {
         fmt::print(fg(fmt::color::crimson), "No such path in filesystem.\n");
         return 1;
