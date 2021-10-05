@@ -7,12 +7,14 @@
 #include <filesystem>
 #include <vector>
 
+const char* version = "fie v0.3.9\n";
+
 namespace ByteSize {
 
-constexpr auto kb = 1'000;
-constexpr auto mb = 1'000'000;
-constexpr auto gb = 1'000'000'000;
-constexpr auto tb = 1'000'000'000'000;
+constexpr auto kb = 1'024;
+constexpr auto mb = 1'048'576;
+constexpr auto gb = 1'073'741'824;
+constexpr auto tb = 1'099'511'627'776;
 
 } // namespace ByteSize
 
@@ -178,7 +180,7 @@ int main(int argc, char* argv[])
     {
         if (std::string(argv[1]).find("--version") != std::string::npos)
         {
-            fmt::print(fg(fmt::color::aqua), "fie v0.3.8\n");
+            fmt::print(fg(fmt::color::aqua), version);
 
             return 0;
         }
