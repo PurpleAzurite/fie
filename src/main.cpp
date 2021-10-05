@@ -5,9 +5,10 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <stdexcept>
 #include <vector>
 
-const char* version = "fie v0.3.9\n";
+const char* version = "fie v0.4.0\n";
 
 namespace ByteSize {
 
@@ -146,8 +147,7 @@ std::string getTime(const std::filesystem::directory_entry& entry)
 
     if (entry.is_regular_file() || entry.is_directory())
     {
-        auto time = system_clock::to_time_t(
-            file_clock::to_sys(entry.last_write_time()));
+        auto time = system_clock::to_time_t(file_clock::to_sys(entry.last_write_time()));
 
         output = fmt::format("{:%y-%m-%d %H:%M:%S}", *std::localtime(&time));
     }
@@ -174,78 +174,71 @@ std::string getName(const std::filesystem::directory_entry& entry)
 
 int main(int argc, char* argv[])
 {
-    auto path = std::filesystem::current_path();
-
-    if (argc > 1)
+    try
     {
-        if (std::string(argv[1]).find("--version") != std::string::npos)
-        {
-            fmt::print(fg(fmt::color::aqua), version);
+        auto path = std::filesystem::current_path();
 
+        if (argc > 1)
+        {
+            if (std::string(argv[1]).find("--version") != std::string::npos)
+            {
+                fmt::print(fg(fmt::color::aqua), version);
+
+                return 0;
+            }
+
+            else if (std::string(argv[1]).find("--help") != std::string::npos)
+            {
+                fmt::print(fg(fmt::color::aqua), "Usage: fie <path> / <args>\n");
+                fmt::print(fg(fmt::color::antique_white), "\t--help\t\tShows this message\n");
+                fmt::print(fg(fmt::color::antique_white),
+                           "\t--version\tDisplays program version information\n\n");
+
+                return 0;
+            }
+
+            else
+                path = argv[1];
+        }
+
+        if (std::filesystem::is_empty(path))
+        {
+            fmt::print(fg(fmt::color::gold), "Directory is empty.\n");
             return 0;
         }
 
-        else if (std::string(argv[1]).find("--help") != std::string::npos)
+        auto dirItr = std::filesystem::directory_iterator(path);
+        auto items = std::vector<Item>();
+
+        for (const auto& i : dirItr)
+            items.emplace_back(getType(i), getPerms(std::filesystem::status(i).permissions()),
+                               getSize(i), getTime(i), getName(i));
+
+        std::sort(items.begin(), items.end(),
+                  [](const Item& a, const Item& b) { return a.name < b.name; });
+
+        // Remove this call if you don't want a header to be printed
+        printHeaders();
+
+        // Modify this loop to change the printout style
+        for (const auto& i : items)
         {
-            fmt::print(fg(fmt::color::aqua), "Usage: fie <path> / <args>\n");
-            fmt::print(fg(fmt::color::antique_white),
-                       "\t--help\t\tShows this message\n");
-            fmt::print(fg(fmt::color::antique_white),
-                       "\t--version\tDisplays program version information\n\n");
+            fmt::print("{0}{1}  {2}  {3}  ", i.type, i.permissions, i.size, i.time);
 
-            return 0;
+            if (i.type == 'l')
+                fmt::print(fg(fmt::color::pink), "{}\n", i.name);
+
+            else if (i.type == 'd')
+                fmt::print(fg(fmt::color::aqua), "{}\n", i.name);
+
+            else if (i.type == '.')
+                fmt::print(fg(fmt::color::gold), "{}\n", i.name);
         }
-
-        else
-            path = argv[1];
     }
 
-    if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path))
+    catch (const std::runtime_error& err)
     {
         fmt::print(fg(fmt::color::crimson), "No such path in filesystem.\n");
-        return 1;
-    }
-
-    if (std::filesystem::is_empty(path))
-    {
-        fmt::print(fg(fmt::color::gold), "Directory is empty.\n");
-        return 0;
-    }
-
-    auto dirItr = std::filesystem::directory_iterator(path);
-    auto items = std::vector<Item>();
-
-    for (const auto& i : dirItr)
-    {
-        auto type = getType(i);
-        auto perm = getPerms(std::filesystem::status(i).permissions());
-        auto size = getSize(i);
-        auto time = getTime(i);
-        auto name = getName(i);
-
-        Item item{type, perm, size, time, name};
-        items.push_back(item);
-    }
-
-    std::sort(items.begin(), items.end(),
-              [](const Item& a, const Item& b) { return a.name < b.name; });
-
-    // Remove this call if you don't want a header to be printed
-    printHeaders();
-
-    // Modify this loop to change the printout style
-    for (const auto& i : items)
-    {
-        fmt::print("{0}{1}  {2}  {3}  ", i.type, i.permissions, i.size, i.time);
-
-        if (i.type == 'l')
-            fmt::print(fg(fmt::color::pink), "{}\n", i.name);
-
-        else if (i.type == 'd')
-            fmt::print(fg(fmt::color::aqua), "{}\n", i.name);
-
-        else if (i.type == '.')
-            fmt::print(fg(fmt::color::gold), "{}\n", i.name);
     }
 
     return 0;
