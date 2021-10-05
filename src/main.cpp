@@ -176,8 +176,6 @@ int main(int argc, char* argv[])
 {
     try
     {
-        auto path = std::filesystem::current_path();
-
         if (argc > 1)
         {
             if (std::string(argv[1]).find("--version") != std::string::npos)
@@ -196,10 +194,9 @@ int main(int argc, char* argv[])
 
                 return 0;
             }
-
-            else
-                path = argv[1];
         }
+
+        auto path = argc > 1 ? argv[1] : std::filesystem::current_path();
 
         if (std::filesystem::is_empty(path))
         {
@@ -239,6 +236,7 @@ int main(int argc, char* argv[])
     catch (const std::runtime_error& err)
     {
         fmt::print(fg(fmt::color::crimson), "No such path in filesystem.\n");
+        return 1;
     }
 
     return 0;
