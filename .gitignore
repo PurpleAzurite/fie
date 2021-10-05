@@ -4,6 +4,7 @@ CMakeLists.txt.user
 install.sh
 
 # Directories
+.cache
 build
 cmake-*
 src/.cache
